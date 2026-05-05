@@ -24,3 +24,15 @@
   (paredit-forward-down)
   (paredit-splice-sexp-killing-backward)
   (paredit-splice-sexp-killing-backward))
+
+
+(defun count-sexps-in-region (beg end)
+  (interactive "r")
+  (save-excursion
+    (goto-char beg)
+    (let ((count 0))
+      (while (< (point) end)
+        (forward-sexp 1)
+        (setq count (1+ count)))
+
+      (message (number-to-string count)))))
