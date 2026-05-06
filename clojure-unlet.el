@@ -1,4 +1,4 @@
-(defun clojure-wrap-in-def ()
+(defun wrap-in-def ()
   (paredit-wrap-round)
   (insert "def ")
   (paredit-forward-slurp-sexp)
@@ -19,7 +19,7 @@
     (paredit-forward-down)
 
     (dotimes (_ num-sexps)
-      (clojure-wrap-in-def)))
+      (wrap-in-def)))
 
   (paredit-forward-down)
   (paredit-splice-sexp-killing-backward)
@@ -27,7 +27,6 @@
 
 
 (defun count-sexps-in-region (beg end)
-  (interactive "r")
   (save-excursion
     (goto-char beg)
     (let ((count 0))
@@ -35,4 +34,29 @@
         (forward-sexp 1)
         (setq count (1+ count)))
 
-      (message (number-to-string count)))))
+      count)))
+
+
+(defun clojure-relet (beg end)
+  (interactive "r")
+
+  (let* ((num-sexps (count-sexps-in-region beg end))
+         (num-defs (1- num-sexps)))
+
+    (paredit-wrap-round)
+    (insert "let ")
+    (paredit-open-square)
+
+    (dotimes (_ (* num-defs 2))
+      (paredit-forward-slurp-sexp))
+
+    (paredit-forward-down)
+
+    (dotimes (_ num-defs)
+      (paredit-forward-kill-word)
+      (paredit-delete-char)
+      (paredit-backward-up)
+      (paredit-forward)
+      (paredit-forward)
+      (paredit-backward))))
+
