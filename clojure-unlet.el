@@ -9,6 +9,7 @@
 
 
 (defun clojure-unlet ()
+  "Turns a `(let [v1 e1 ... vn en] body)` into `(def v1 e1) ... (def vn en) body`"
   (paredit-forward-down)
   (paredit-forward)
   (forward-char)
@@ -38,6 +39,7 @@
 
 
 (defun clojure-relet (beg end)
+  "Turns a `(def v1 e1) ... (def vn en) body` into `(let [v1 e1 ... vn en] body)`"
   (interactive "r")
 
   (let* ((num-sexps (count-sexps-in-region beg end))
