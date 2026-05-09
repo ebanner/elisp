@@ -7,9 +7,10 @@
   (paredit-forward)
   (paredit-backward))
 
-
 (defun clojure-unlet ()
   "Turns a `(let [v1 e1 ... vn en] body)` into `(def v1 e1) ... (def vn en) body`"
+  (interactive)
+
   (paredit-forward-down)
   (paredit-forward)
   (forward-char)
@@ -26,7 +27,6 @@
   (paredit-splice-sexp-killing-backward)
   (paredit-splice-sexp-killing-backward))
 
-
 (defun count-sexps-in-region (beg end)
   (save-excursion
     (goto-char beg)
@@ -34,9 +34,7 @@
       (while (< (point) end)
         (forward-sexp 1)
         (setq count (1+ count)))
-
       count)))
-
 
 (defun clojure-relet (beg end)
   "Turns a `(def v1 e1) ... (def vn en) body` into `(let [v1 e1 ... vn en] body)`"
@@ -44,6 +42,8 @@
 
   (let* ((num-sexps (count-sexps-in-region beg end))
          (num-defs (1- num-sexps)))
+
+    (deactivate-mark)
 
     (paredit-wrap-round)
     (insert "let ")
